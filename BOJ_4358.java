@@ -1,18 +1,15 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 public class BOJ_4358 {
     public static void main(String[] args) throws IOException{
         Map<String, Integer> map = new HashMap<>();
-        Scanner sc = new Scanner(System.in);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
