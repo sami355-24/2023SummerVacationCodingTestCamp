@@ -4,14 +4,9 @@ import java.io.InputStreamReader;
 
 public class BOJ_15724 {
 
-    static int squareSum(int unitCol, int unitRow, int squareCol, int squareRow, int[][] territory) {
-        int sum = 0;
-
-        for(int i = 1; i <= squareRow; i++) {
-            for(int j = 1; j <= squareCol; j++) {
-                sum += territory[i][j];
-            }
-        }
+    static int squareSum(int unitRow, int unitCol, int squareRow, int squareCol, int[][] dp) {
+        
+        int sum = dp[squareRow][squareCol] - dp[squareRow][unitCol - 1] - dp[unitRow - 1][squareCol] + dp[unitRow - 1][unitCol - 1];                  
 
         return sum;
     }
@@ -26,6 +21,7 @@ public class BOJ_15724 {
 
         // 전체영토
         int[][] territory = new int[N + 1][M + 1];
+        int[][] dp = new int[N + 1][M + 1];
 
         // 영토별 인구수 값 넣기
         for(int i = 1; i <= N; i++) {
@@ -34,6 +30,8 @@ public class BOJ_15724 {
             for(int j = 1; j <= M; j++) {
                 int value = Integer.parseInt(values[j - 1]);
                 territory[i][j] = value;
+
+                dp[i][j] = dp[i][j - 1] + dp[i - 1][j] - dp[i - 1][j - 1] + territory[i][j];
             }
         }
 
@@ -56,7 +54,7 @@ public class BOJ_15724 {
             squareRow = Integer.parseInt(info[2]);
             squareCol = Integer.parseInt(info[3]);
 
-            answer[i] = squareSum(unitCol, unitRow, squareCol, squareRow, territory);
+            answer[i] = squareSum(unitRow, unitCol, squareRow, squareCol, dp);
         }
 
         // 정답출력
