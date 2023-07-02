@@ -12,14 +12,24 @@ public class BOJ_6443 {
 
     static void permutation(int arr[], String word, int depth, int wordLength) {
         if(depth == wordLength) {
-            // 문자열 위치 바꾸기
+            String s = "";
+            int index = 0;
+            char c;
+
+            for(int i = 0; i < wordLength; i++) {
+                index = arr[i] - 1;
+                c = word.charAt(index);
+                s = s + c;
+            }
+
+            hashSet.add(s);
             return;
         }
 
         for(int i = depth; i < wordLength; i++) {
-            swap(arr , depth , i);
+            swap(arr, depth, i);
             permutation(arr, word, depth + 1, wordLength);
-            swap(arr,depth,i);
+            swap(arr, depth, i);
         }
     }
 
@@ -29,22 +39,15 @@ public class BOJ_6443 {
         arr[i] = temp;
     }
 
-    static void print(int[] arr, int r) {
-        for(int i = 0; i < r; i++) {
-            System.out.print(arr[i]);
-        }
-        System.out.println();
-    }
-
     public static void main(String[] args) throws IOException{
         BufferedReader br =  new BufferedReader(new InputStreamReader(System.in));
-        int wordCount = Integer.parseInt(br.readLine()); // 단어 개수
+        int wordCount = Integer.parseInt(br.readLine());
         String word;
 
         for(int i = 0; i < wordCount; i++) {
-            hashSet = new HashSet<String>();
+            hashSet = new HashSet<String>(); // HashSet 선언
             word = br.readLine();
-            int wordLength = word.length();
+            int wordLength = word.length(); // 문자 길이
 
             int[] arr = new int[wordLength + 1];
 
@@ -53,12 +56,14 @@ public class BOJ_6443 {
             }
 
             // 순열
-            permutation(arr, 0 , word.length());
-            // 순열
+            permutation(arr, word,0, word.length());
             
             list = new ArrayList<String>(hashSet);
             list.sort(Comparator.naturalOrder());
-            System.out.println(list);
+            
+            for(String s : list) {
+                System.out.println(s);
+            }
         }
     }
 }
