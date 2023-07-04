@@ -1,69 +1,72 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Arrays;
 
 public class BOJ_6443 {
-    static HashSet<String> hashSet;
-    static List<String> list;
-
-    static void permutation(int arr[], String word, int depth, int wordLength) {
-        if(depth == wordLength) {
-            String s = "";
-            int index = 0;
-            char c;
-
-            for(int i = 0; i < wordLength; i++) {
-                index = arr[i] - 1;
-                c = word.charAt(index);
-                s = s + c;
-            }
-
-            hashSet.add(s);
-            return;
-        }
-
-        for(int i = depth; i < wordLength; i++) {
-            swap(arr, depth, i);
-            permutation(arr, word, depth + 1, wordLength);
-            swap(arr, depth, i);
-        }
-    }
-
-    static void swap(int[] arr, int depth, int i) {
-        int temp = arr[depth];
-        arr[depth] = arr[i];
-        arr[i] = temp;
-    }
 
     public static void main(String[] args) throws IOException{
         BufferedReader br =  new BufferedReader(new InputStreamReader(System.in));
         int wordCount = Integer.parseInt(br.readLine());
-        String word;
 
         for(int i = 0; i < wordCount; i++) {
-            hashSet = new HashSet<String>(); // HashSet ÏÑ†Ïñ∏
-            word = br.readLine();
-            int wordLength = word.length(); // Î¨∏Ïûê Í∏∏Ïù¥
+            String input = br.readLine();
+            StringBuilder sb = new StringBuilder();
+            char[] arr = new char[input.length()];
 
-            int[] arr = new int[wordLength + 1];
-
-            for(int j = 0; j < wordLength; j++) {
-                arr[j] = j + 1;
+            for(int j = 0; j < arr.length; j++) {
+                arr[j] = input.charAt(j);
             }
 
-            // ÏàúÏó¥
-            permutation(arr, word,0, word.length());
-            
-            list = new ArrayList<String>(hashSet);
-            list.sort(Comparator.naturalOrder());
-            
-            for(String s : list) {
-                System.out.println(s);
+            Arrays.sort(arr);
+
+            for(int j = 0; j < arr.length; j++) {
+                sb.append(arr[j]);
             }
+            sb.append("\n");
+
+            while(next_permutation(arr)) {
+                for(int j = 0; j < arr.length; j++) {
+                    sb.append(arr[j]);
+                }
+                sb.append("\n");
+            }
+
+            System.out.print(sb.toString());
         }
+    }
+
+    public static boolean next_permutation(char[] arr) { //next_permutation ¿Ã∂ı? ∞¯∫Œ«ÿæﬂ∞⁄¥Ÿ.
+        int i =  arr.length - 1;
+
+        while(i > 0 && arr[i] <= arr[i - 1]) {
+            i--;
+        }
+
+        if(i <= 0) {
+            return false;
+        }
+
+        int j =  arr.length - 1;
+
+        while(arr[i - 1] >= arr[j]) {
+            j--;
+        }
+
+        char temp = arr[j];
+        arr[j] = arr[i - 1];
+        arr[i - 1] = temp;
+
+        j = arr.length - 1;
+
+        while(i < j) {
+            temp = arr[j];
+            arr[j] = arr[i];
+            arr[i] = temp;
+            i++;
+            j--;
+        }
+
+        return true;
     }
 }
