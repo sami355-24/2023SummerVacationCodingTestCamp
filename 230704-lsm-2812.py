@@ -1,26 +1,19 @@
 import sys
-
 input = sys.stdin.readline
 
 N, K = map(int, input().split(" "))
-data = list(map(int, list(input()[:-1])))
+datas = input().rstrip()
 
-while K>0:
-    for idx in range(N-1):
-        if data[idx] < data[idx+1]:
-            del data[idx]
-            K -= 1
-            N -= 1
-            break
-
-    for idx in range(N-1, 0, -1):
-        if data[idx-1] > data[idx]:
-            del data[idx]
-            K -= 1
-            N -= 1
-            break
-        
-    
+idx = 0
+st = []
+for data in datas:
+    while st and st[-1] < data and K > 0:
+        st.pop()
+        K -= 1
+    st.append(data) 
     
 
-    pass
+if K > 0:
+    st = st[:-K]
+
+print(''.join(st))
