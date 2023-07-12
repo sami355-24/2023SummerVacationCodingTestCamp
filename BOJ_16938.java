@@ -19,7 +19,7 @@ public class BOJ_16938 {
         L = Integer.parseInt(st.nextToken()); // 문제 난이도 하한선
         R = Integer.parseInt(st.nextToken()); // 문제 난이도 상한선
         X = Integer.parseInt(st.nextToken()); // 가장 쉬운 문제와 어려운 문제의 난이도 차이
-
+        
         int[] A = new int[N]; // 각 문제의 난이도
         
         st = new StringTokenizer(br.readLine(), " ");
@@ -33,8 +33,14 @@ public class BOJ_16938 {
         /* 전체 경우의 수 2개 이하의 집합을 순열 후 조건에 일치하는지 확인
          * 만약에 일치한다면 이거 카운트하기
          */
+
         boolean[] visited = new boolean[N];
-        powerSet(A ,visited ,N ,0);
+        
+        for(int i = 0; i < N; i++) {
+            visited[i] = false;
+        }
+
+        powerSet(A, visited, N, 0);
 
         System.out.println(answer);
     }
@@ -53,28 +59,43 @@ public class BOJ_16938 {
     }
 
     static void checkConditon(int[] arr, boolean[] visited, int n) {
-        int[] c = new int[n];
-        int count = 0;
+        int[] c = new int[n + 1];
+        int count = -1;
         int sumLevel = 0;
 
         for(int i = 0; i < n; i++) {
             if(visited[i] == true) {
-                c[count++] = arr[i];
-                sumLevel += arr[i];
+                count++;
+                c[count] = arr[i];
             }
         }
-
-        if(count < 2) {
-            return;
+        
+        if(count < 1) { // 사용할 문제는 두개 이상
+            return; 
         }
 
-        Arrays.sort(c);
+        Arrays.sort(c,0,count);
+        
+        for(int i = 0; i <= count; i++) {
+            sumLevel += c[i];
+        }
 
-        int easiestPlusHardest = c[0] + c[count - 1];
+        // for(int i = 0; i <= count; i++) {
+        //         System.out.print(c[i] + " ");
+        //     }
+        
+        // System.out.println();
 
+        int easiestPlusHardest = Math.abs(c[count] - c[0]);
+        
         if(sumLevel >= L && sumLevel <= R) {
             if(easiestPlusHardest >= X) {
                 answer++;
+                // for(int i = 0; i <= count; i++) {
+                //     System.out.print(c[i]);
+                // }
+        
+                // System.out.println();
             }
         }
     }
