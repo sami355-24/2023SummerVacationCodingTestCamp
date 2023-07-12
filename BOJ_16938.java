@@ -10,6 +10,7 @@ public class BOJ_16938 {
     static int L;
     static int R;
     static int X;
+    static int[] A;
 
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,7 +21,7 @@ public class BOJ_16938 {
         R = Integer.parseInt(st.nextToken()); // 문제 난이도 상한선
         X = Integer.parseInt(st.nextToken()); // 가장 쉬운 문제와 어려운 문제의 난이도 차이
         
-        int[] A = new int[N]; // 각 문제의 난이도
+        A = new int[N]; // 각 문제의 난이도
         
         st = new StringTokenizer(br.readLine(), " ");
 
@@ -28,75 +29,22 @@ public class BOJ_16938 {
             A[i] = Integer.parseInt(st.nextToken());
         }
 
-        // 방법
+        Arrays.sort(A);
 
-        /* 전체 경우의 수 2개 이하의 집합을 순열 후 조건에 일치하는지 확인
-         * 만약에 일치한다면 이거 카운트하기
-         */
-
-        boolean[] visited = new boolean[N];
-        
-        for(int i = 0; i < N; i++) {
-            visited[i] = false;
-        }
-
-        powerSet(A, visited, N, 0);
+        sol(0,0,0,Integer.MIN_VALUE,Integer.MAX_VALUE);
 
         System.out.println(answer);
     }
 
-    static void powerSet(int[] arr, boolean[] visited, int n, int idx) {
-        if (idx == n) {
-            checkConditon(arr, visited, n);
-            return;
-        }
-
-        visited[idx] = false;
-        powerSet(arr, visited, n, idx + 1);
-
-        visited[idx] = true;
-        powerSet(arr, visited, n, idx + 1);
-    }
-
-    static void checkConditon(int[] arr, boolean[] visited, int n) {
-        int[] c = new int[n + 1];
-        int count = -1;
-        int sumLevel = 0;
-
-        for(int i = 0; i < n; i++) {
-            if(visited[i] == true) {
-                count++;
-                c[count] = arr[i];
-            }
-        }
-        
-        if(count < 1) { // 사용할 문제는 두개 이상
-            return; 
-        }
-
-        Arrays.sort(c,0,count);
-        
-        for(int i = 0; i <= count; i++) {
-            sumLevel += c[i];
-        }
-
-        // for(int i = 0; i <= count; i++) {
-        //         System.out.print(c[i] + " ");
-        //     }
-        
-        // System.out.println();
-
-        int easiestPlusHardest = Math.abs(c[count] - c[0]);
-        
-        if(sumLevel >= L && sumLevel <= R) {
-            if(easiestPlusHardest >= X) {
+    static void sol(int idx, int cnt, int sum, int max, int min) {
+        if(cnt >= 2) {
+            if(sum >= L && sum <= R && max - min >= X) {
                 answer++;
-                // for(int i = 0; i <= count; i++) {
-                //     System.out.print(c[i]);
-                // }
-        
-                // System.out.println();
             }
+        }
+
+        for(int i = idx; i < N; i++) {
+            sol(i + 1, cnt + 1, sum + A[i], Math.max(max,A[i]), Math.min(min,A[i]));
         }
     }
 }
