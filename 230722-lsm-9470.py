@@ -19,9 +19,10 @@ for _ in range(T):
             queue.append(i)
             indegree[i][1] = 1
  
+    # 현재 큐에는 진입 차수가 0인 노드들만 들어가 있음
     while queue:
         x = queue.popleft() # 큐에서 빼내면서
-        for i in ndict[x]: 
+        for i in ndict[x]: # x->i1, i2, i3
             indegree[i][0] -= 1 # 큐에서 빼낸 노드와 연결되어 있는 노드와의 연결고리를 끊는다.
             if indegree[i][1] < indegree[x][1]: # 큐에서 빼낸 노드와 해당 노드와 연결되어 있는 노드간의 최대 레벨들 비교한다.
                 indegree[i][1] = indegree[x][1]
