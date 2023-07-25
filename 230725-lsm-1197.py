@@ -11,7 +11,7 @@ total_weight = 0
 heap = [[0,1]]
 answer = 0
 
-for i in range(V):
+for i in range(E):
     a, b, c = map(int, input().split(" "))
     graph[a].append([c, b])
     graph[b].append([c, a])
