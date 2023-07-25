@@ -14,17 +14,31 @@ public class BOJ_12919 {
     }
 
     static int sol(String S, String T) {
-        StringBuffer sb = new StringBuffer(S);
-        String reverse_S = sb.reverse().toString();
+        if(S.length() == T.length()) {
+            if(S.equals(T) == true) {
+                return 1;
+            }
 
-        if(!(T.contains(S) || T.contains(reverse_S))) {
-            return 0;
+            else {
+                return 0;
+            }
         }
 
-        if(T.charAt(0) == 'A' && T.contains("B")) {
-            return 0;
+        int ret = 0;
+        StringBuilder sb;
+
+        if(T.charAt(0) == 'B') { // B인경우 역방향으로 돌려서 자르기
+            sb = new StringBuilder(T.substring(1));
+            String temp = sb.reverse().toString();
+            ret += sol(S,temp);    
         }
 
-        return 1;
+        if(T.charAt(T.length() - 1) == 'A') { // A의 경우 가장 뒤에꺼만 남겨두고 자르기
+            sb = new StringBuilder(T.substring(0,T.length() - 1));
+            String temp = sb.toString();
+            ret += sol(S,temp);
+        }
+
+        return ret > 0 ? 1 : 0;
     }
 }
