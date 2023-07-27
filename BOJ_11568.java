@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class BOJ_11568 {
@@ -23,24 +25,38 @@ public class BOJ_11568 {
     }
 
     static int sol(int[] arr, int alen) {
-        int max = 0;
-        
-        for(int i = 0; i < alen; i++) {
-            int tmp = 1;
-            int comp = i; // 비교 수
+        List<Integer> list = new ArrayList<Integer>();
 
-            for(int j = i + 1; j < alen; j++) {
-                if(arr[j] > arr[comp]) {
-                    tmp++;
-                    comp = j;
+        list.add(arr[0]);
+        int comp = 0;
+
+        for(int i = 1; i < alen; i++) {
+            comp = list.size() - 1;
+            int del_num = 0;
+
+            if(list.get(comp) >= arr[i]) {
+                for(int j = comp; j >= 0; j--) {
+                    if(list.get(j) >= arr[i]) {
+                        del_num = j;
+                    }
                 }
+
+                list.remove(del_num);
+                list.add(del_num, arr[i]);
             }
 
-            if(max < tmp) {
-                max = tmp;
+            else {
+                list.add(arr[i]);
             }
+
+            // for(int k = 0; k < list.size(); k++){
+            //     System.out.print(list.get(k) + " ");
+            // }
+            // System.out.println();
         }
+        
+        int ret = list.size();
 
-        return max;      
+        return ret; 
     }
 }
