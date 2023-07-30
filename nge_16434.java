@@ -16,6 +16,8 @@ class Room {
 }
 
 class Hero {
+    long maxHp = 0;
+    long curHp = 0;
     long atk;
 
     public Hero(long atk) {
@@ -45,51 +47,23 @@ public class nge_16434 {
 
             room[i] = new Room(id,atk,hp);
         }
-
-        long[] damageCount = new long[N];
-        
-        for(int i = 0; i < N; i++) {
-            damageCount[i] = 0;
-        }
+        // 입력
 
         Hero hero = new Hero(ATK);
 
         for(int i = 0; i < N; i++) {
-
             if(room[i].id == 1) {
-                long hitCount = room[i].hp / hero.atk;
-                
-                if(room[i].hp % hero.atk != 0) {
-                    hitCount += 1;
-                }
-
-                long defenceCount = hitCount - 1;
-
-                damageCount[i] = defenceCount * room[i].atk;
+                long defenceCount = (room[i].hp / hero.atk) - (room[i].hp % hero.atk != 0 ? 0 : 1);
+                hero.curHp += defenceCount * room[i].atk;
+                hero.maxHp = Math.max(hero.maxHp, hero.curHp);
             }
 
             else {
                 hero.atk += room[i].atk;
-                damageCount[i] -= (room[i].hp);
+                hero.curHp = Math.max(hero.curHp - room[i].hp, 0);
             }
         }
 
-        System.out.println(sol(damageCount, N));
-    }
-
-    static long sol(long[] damageCount, int N) {
-        long ans = 0;
-
-        for(int i = 0; i < N; i++) {
-            ans += damageCount[i];
-        }
-
-        // for(int i = 0; i < N; i++) {
-        //     if(ans < damageCount[i]) {
-        //         ans = damageCount[i];
-        //     }
-        // }
-
-        return ans + 1;
+        System.out.println(hero.maxHp + 1);
     }
 }
