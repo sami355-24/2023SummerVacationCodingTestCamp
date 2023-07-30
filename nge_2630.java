@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class BOJ_2630 {
+public class nge_2630 {
     static int[][] arr;
     static int white = 0; // 흰색 색종이 개수
     static int blue = 0; // 파란색 색종이 개수

@@ -3,9 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 /* 
-    Á¤±ÔÇ¥Çö½Ä »ç¿ë
+    ï¿½ï¿½ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 */
-public class BOJ_2671{
+public class nge_2671{
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String noise = "NOISE";
@@ -14,7 +14,7 @@ public class BOJ_2671{
         String regexp = "^(100+1+|01)+";
         String str = br.readLine();
 
-        boolean flag = Pattern.matches(regexp, str); // str Á¤±Ô½Ä°ú ÀÏÄ¡ÇÏ´Â È®ÀÎ
+        boolean flag = Pattern.matches(regexp, str); // str ï¿½ï¿½ï¿½Ô½Ä°ï¿½ ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ È®ï¿½ï¿½
 
         if(flag)
             System.out.println(submarine);

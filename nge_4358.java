@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BOJ_4358 {
+public class nge_4358 {
     public static void main(String[] args) throws IOException{
         Map<String, Integer> map = new HashMap<>();
 
@@ -15,7 +15,7 @@ public class BOJ_4358 {
         String input = br.readLine();
         int total = 0;
         
-        while(true) { // map¿¡ ÀÔ·Â°ª Á¤º¸¸¦ Ãß°¡
+        while(true) { // mapï¿½ï¿½ ï¿½Ô·Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
             map.put(input, map.getOrDefault(input, 0) + 1);
             total++;
 
@@ -25,11 +25,11 @@ public class BOJ_4358 {
             }
         }
         
-        // »çÀü¼øÀ¸·Î Á¤·Ä
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         List<String> keySet = new ArrayList<>(map.keySet());
         Collections.sort(keySet);
 
-        // °á°ú Ãâ·Â
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         for(var key : keySet) {
             double value = (double)map.get(key) / total * 100;
             System.out.println(key + " " + String.format("%.4f", value));

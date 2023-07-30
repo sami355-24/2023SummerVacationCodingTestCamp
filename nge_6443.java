@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-public class BOJ_6443 {
+public class nge_6443 {
 
     public static void main(String[] args) throws IOException{
         BufferedReader br =  new BufferedReader(new InputStreamReader(System.in));
@@ -36,7 +36,7 @@ public class BOJ_6443 {
         }
     }
 
-    public static boolean next_permutation(char[] arr) { //next_permutation ÀÌ¶õ? °øºÎÇØ¾ß°Ú´Ù.
+    public static boolean next_permutation(char[] arr) { //next_permutation ï¿½Ì¶ï¿½? ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ß°Ú´ï¿½.
         int i =  arr.length - 1;
 
         while(i > 0 && arr[i] <= arr[i - 1]) {

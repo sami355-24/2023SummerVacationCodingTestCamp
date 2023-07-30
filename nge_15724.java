@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class BOJ_15724 {
+public class nge_15724 {
 
     static int squareSum(int unitRow, int unitCol, int squareRow, int squareCol, int[][] dp) {
         
@@ -15,15 +15,15 @@ public class BOJ_15724 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] territory_size = br.readLine().split(" ");
 
-        // ¿µÅäÀÇ Çà·ÄÁ¤º¸
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         int N = Integer.parseInt(territory_size[0]);
         int M = Integer.parseInt(territory_size[1]);
 
-        // ÀüÃ¼¿µÅä
+        // ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½
         int[][] territory = new int[N + 1][M + 1];
         int[][] dp = new int[N + 1][M + 1];
 
-        // ¿µÅäº° ÀÎ±¸¼ö °ª ³Ö±â
+        // ï¿½ï¿½ï¿½äº° ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö±ï¿½
         for(int i = 1; i <= N; i++) {
             String[] values = br.readLine().split(" ");
 
@@ -35,29 +35,29 @@ public class BOJ_15724 {
             }
         }
 
-        int countToWanted = Integer.parseInt(br.readLine()); // ¿ÕÀÌ ¾Ë¾Æ³»°íÀÚ ÇÏ´Â Á÷»ç°¢ÇüÀÇ ¼ö
-        int[] answer = new int[countToWanted]; // Á÷»ç°¢ÇüÀÇ ÀÎ±¸¼ö
+        int countToWanted = Integer.parseInt(br.readLine()); // ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+        int[] answer = new int[countToWanted]; // ï¿½ï¿½ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½
 
-        int unitCol; // ´ÜÀ§ ¿­
-        int unitRow; // ´ÜÀ§ Çà
+        int unitCol; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+        int unitRow; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
-        int squareCol; // ¾Ë°í ½ÍÀº Á÷»ç°¢ÇüÀÇ ¿­
-        int squareRow; // ¾Ë°í ½ÍÀº Á÷»ç°¢ÇüÀÇ Çà
+        int squareCol; // ï¿½Ë°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+        int squareRow; // ï¿½Ë°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
         for(int i = 0; i < countToWanted; i++) {
             String[] info = br.readLine().split(" ");
-            // ´ÜÀ§Çà·Ä
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             unitRow = Integer.parseInt(info[0]);
             unitCol = Integer.parseInt(info[1]);
 
-            // Á÷»ç°¢ÇüÇà·Ä
+            // ï¿½ï¿½ï¿½ç°¢ï¿½ï¿½ï¿½ï¿½ï¿½
             squareRow = Integer.parseInt(info[2]);
             squareCol = Integer.parseInt(info[3]);
 
             answer[i] = squareSum(unitRow, unitCol, squareRow, squareCol, dp);
         }
 
-        // Á¤´äÃâ·Â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         for(int i = 0;  i < countToWanted; i++) {
             System.out.println(answer[i]);
         }

@@ -2,15 +2,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class BOJ_10844 {
+public class nge_10844 {
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int input = Integer.parseInt(br.readLine()); // ÀÔ·Â
+        int input = Integer.parseInt(br.readLine()); // ï¿½Ô·ï¿½
         
         long[][] d = new long[input + 1][10];
         long mod = 1000000000;
 
-        // ÃÊ±âÈ­
+        // ï¿½Ê±ï¿½È­
         d[1][0] = 0;
         for(int i = 1; i <= 9; i++) {
             d[1][i] = 1;

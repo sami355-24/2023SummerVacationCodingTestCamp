@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class BOJ_16938 {
+public class nge_16938 {
     static int answer = 0; // 정답
     static int N;
     static int L;
