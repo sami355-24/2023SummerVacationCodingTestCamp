@@ -1,37 +1,35 @@
 import sys
 from collections import deque
-input = lambda: sys.stdin.readline().rstrip()
-
-dir = [(-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1)]
-M, N = map(int, input().split())
-ary = [[-1]*N for _ in range(M)]
-visite = [[False]*N for _ in range(M)]
-queue = deque()
-count = 0
-test = 0
-
-for m in range(M):
-    temp = input().split(" ")
-    for n in range(N):
-        ary[m][n] = temp[n]
 
 
-for m in range(M):
-    for n in range(N):
-        if ary[m][n] == '1' and not visite[m][n]:
-            queue.append((m, n))
-            visite[m][n] = True
+def bfs(x, y):
+    queue = deque()
+    queue.append((x,y))
+    visited[x][y] = True
 
-        while queue:
-            now = queue.popleft()
-            now_x = now[0]
-            now_y = now[1]
-            for x, y in dir:
-                if (0<= now_x+x < M) and (0 <= now_y+y < N) and ary[now_x+x][now_y+y] == '1' and not visite[now_x+x][now_y+y]:
-                    queue.append((now_x+x, now_y+y))
-                    visite[now_x+x][now_y+y] = True
+    while queue:    
+        x, y = queue.popleft()
+        for i in range(8):
+            nx = x + dx[i]
+            ny = y + dy[i]
+            if 0 <= nx < n and 0 <= ny < m:
+                if not visited[nx][ny] and data[nx][ny]==1:
+                    queue.append((nx, ny))
+                    visited[nx][ny] = True
 
-            if not queue:
-                count+=1
+n ,m = map(int, sys.stdin.readline().split(" "))
+data = [list(map(int, sys.stdin.readline().rstrip().split(" "))) for _ in range(n)]
+visited = [[False] * m for _ in range(n)]
+dx = [1, 1, 1, -1, -1, -1, 0, 0]
+dy = [1, -1, 0, 1, -1, 0, 1, -1]
+cnt = 0
 
-print(count)
+            
+
+for i in range(n):
+    for j in range(m):
+        if not visited[i][j] and data[i][j] == 1:
+            bfs(i, j)
+            cnt +=1
+
+print(cnt)
