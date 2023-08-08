@@ -20,22 +20,36 @@ public class nge_2467 {
     }
 
     static void sol() {
-        int gap = Integer.MAX_VALUE;
-        int tmp = 0;
-        int[] save = new int[2];
+        int left = 0;
+        int right = n - 1;
+        int ml = 0;
+        int mr = 0;
+        long min = Long.MAX_VALUE;
 
-        for(int i = 0; i < n; i++) {
-            for(int j = i + 1; j < n; j++) {
-                tmp = Math.abs(waters[i] + waters[j]);
+        while(left < right) {
+            long sum = waters[left] + waters[right];
+            long gap = Math.abs(sum);
 
-                if(tmp < gap) {
-                    gap = tmp;
-                    save[0] = waters[i];
-                    save[1] = waters[j];
-                }
+            if(sum == 0) {
+                ml = waters[left];
+                mr = waters[right];
+            }
+
+            if(min > gap) {
+                min = gap;
+                ml = waters[left];
+                mr = waters[right];
+            }
+
+            if(sum > 0) {
+                right--;
+            }
+
+            else {
+                left++;
             }
         }
 
-        System.out.println(save[0] + " " + save[1]);
+        System.out.println(ml + " " + mr);
     }
 }
