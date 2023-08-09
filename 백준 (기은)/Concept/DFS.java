@@ -1,4 +1,4 @@
-package Conception;
+package Concept;
 
 public class DFS {
     static boolean[] visited = new boolean[9];
