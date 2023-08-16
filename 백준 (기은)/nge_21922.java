@@ -1,35 +1,39 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Point {
-    int x;
-    int y;
-
-    Point() {
-
-    }
-
-    Point(Point p) {
-        this.x = p.x;
-        this.y = p.y;
-    }
-}
-
 public class nge_21922 {
-    static int[][] matrix;
-    static boolean[][] visited;
+    final static int fromUp = - 1;
+    final static int toDown = - 1;
+
+    final static int fromDown = 1;
+    final static int toUp = 1;
+
+    final static int fromLeft = -2;
+    final static int toRight = - 2;
+    
+    final static int fromRight = 2;
+    final static int toLeft = 2;
+    
+    static class Info {
+        int row, col, dir;
+
+        public Info(int row, int col, int dir) {
+            this.row = row;
+            this.col = col;
+            this.dir = dir;
+        }
+    }
+    
+    static Queue<Info> q = new LinkedList<>();
+    static int[][] map;
     static int n;
     static int m;
-    static boolean isAirCon;
-    static int cntAir = 0;
-    static Point[] airPoint;
     static int count = 0;
-
-    // 상하좌우
-    static int[] moveX = {0,0,-1,1};
-    static int[] moveY = {-1,1,0,0};
+    static boolean[][] hasAir;
 
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -38,117 +42,79 @@ public class nge_21922 {
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
         
-        matrix = new int[n + 1][m + 1];
-        visited = new boolean[n + 1][m + 1];
-        airPoint = new Point[51];
-
+        map = new int[n + 1][m + 1];
+        hasAir = new boolean[n + 1][m + 1];
+        
         for(int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
             for(int j = 0; j < m; j++) {
-                matrix[i][j] = Integer.parseInt(st.nextToken());
+                map[i][j] = Integer.parseInt(st.nextToken());
 
-                if(matrix[i][j] == 9) {
-                    isAirCon = true;
-                    airPoint[cntAir] = new Point();
-                    airPoint[cntAir].y = i;
-                    airPoint[cntAir].x = j;
-                    cntAir++;
+                if(map[i][j] == 9) {
+                    q.add(new Info(i - 1, j, toUp));
+                    q.add(new Info(i + 1, j, toDown));
+                    q.add(new Info(i, j - 1, toLeft));
+                    q.add(new Info(i, j + 1, toRight));
+                    hasAir[i][j] = true;
+                    count++;
                 }
             }
         }
 
         sol();
-
-        // for(int i = 0; i < n; i++) {
-        //     for(int j = 0; j < m; j++) {
-        //         System.out.print(visited[i][j] + " ");
-        //     }
-        //     System.out.println();
-        // }
-        System.out.println(count + cntAir);
+        System.out.println(count);
     }
 
     static void sol() {
-        if(isAirCon == false) {
-            return;
-        }
+        while(!q.isEmpty()) {
+            Info info = q.poll();
+            int row =  info.row;
+            int col = info.col;
+            int dir = info.dir;
 
-        for(int j = 0; j < cntAir; j++) {
-            for(int i = 1; i <= 4; i++) {
-                Point ms = new Point(airPoint[j]);
-                move(ms,i);
-            }
-        }
-    }
-
-    static void move(Point ms, int dir) {
-        int d = dir;
-
-        while(true) {
-            ms.x += moveX[d - 1];
-            ms.y += moveY[d - 1];
-            
-            if(ms.x < 0 || ms.x > m - 1) {
-                break;
+            if(row < 0 || row >= n || col < 0 || col >= m) {
+                continue;
             }
 
-            if(ms.y < 0 || ms.y > n - 1) {
-                break;
-            }
-
-            if(visited[ms.y][ms.x] == false) {
+            if(!hasAir[row][col]) {
+                hasAir[row][col] = true;
                 count++;
-                visited[ms.y][ms.x] = true;
             }
 
-            if(matrix[ms.y][ms.x] == 1) {
-                if(d == 3 || d == 4) {
+            switch(map[row][col]) {
+                case 0 :
+                    if(dir == fromUp)   q.add(new Info(row + 1, col, toDown));
+                    if(dir == fromDown) q.add(new Info(row - 1, col, toUp));
+                    if(dir == fromLeft) q.add(new Info(row, col + 1, toRight));
+                    if(dir == fromRight) q.add(new Info(row, col - 1, toLeft));
                     break;
-                }
-                
-            }
 
-            else if(matrix[ms.y][ms.x] == 2) {
-                if(d == 1 || d == 2) {
+                case 1 :
+                    if(dir == fromUp)   q.add(new Info(row + 1, col, toDown));
+                    if(dir == fromDown) q.add(new Info(row - 1, col, toUp));
                     break;
-                }
-              
-            }
 
-            else if(matrix[ms.y][ms.x] == 3) {
-                if(d == 1) {
-                    d = 4;
-                }
+                case 2 :
+                    if(dir == fromLeft) q.add(new Info(row, col + 1, toRight));
+                    if(dir == fromRight) q.add(new Info(row, col - 1, toLeft));
+                    break;
 
-                else if(d == 2) {
-                    d = 3;
-                }
+                case 3 :
+                    if(dir ==  fromUp) q.add(new Info(row, col - 1, toLeft));
+                    if(dir == fromDown) q.add(new Info(row, col + 1, toRight));
+                    if(dir == fromRight) q.add(new Info(row + 1, col, toDown));
+                    if(dir == fromLeft) q.add(new Info(row - 1, col, toUp));
+                    break;
 
-                else if(d == 3) {
-                    d = 2;
-                }
+                case 4 : 
+                    if(dir == fromUp) q.add(new Info(row, col + 1, toRight));
+                    if(dir == fromDown) q.add(new Info(row, col - 1, toLeft));
+                    if(dir == fromRight) q.add(new Info(row - 1, col, toUp));
+                    if(dir == fromLeft) q.add(new Info(row + 1, col, toDown));
+                    break;
 
-                else {
-                    d = 1;
-                }
-            }
-
-            else if(matrix[ms.y][ms.x] == 4) {
-                if(d == 1) {
-                    d = 3;
-                }
-
-                else if(d == 2) {
-                    d = 4;
-                }
-
-                else if(d == 3) {
-                    d = 1;
-                }
-
-                else {
-                    d = 2;
-                }
+                default :
+                    break;
             }
         }
     }
