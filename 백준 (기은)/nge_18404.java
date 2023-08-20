@@ -5,49 +5,37 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Knight {
-    int x;
-    int y;
-    int moveCount;
+// class Knight {
+//     int x;
+//     int y;
+//     int moveCount;
 
-    public Knight(int x, int y, int moveCount) {
-        this.x = x;
-        this.y = y;
-        this.moveCount = moveCount;
-    }
-}
+//     public Knight(int x, int y, int moveCount) {
+//         this.x = x;
+//         this.y = y;
+//         this.moveCount = moveCount;
+//     }
+// }
 
 public class nge_18404 {
     static int n; // 체스판 n x n
-    static int m; // 적의 말의 수
     static int[][] map; // 체스판
     static int[] moveY = {-2, -2, -1, -1, 1, 1, 2, 2};
     static int[] moveX = {-1, 1, -2, 2, -2, 2, -1, 1};
-    static Knight knight;
-
-    // 초기 나이트 좌표
-    static int kX;
-    static int kY;
-
-    static boolean[][] visited; // 방문 여부
-    static Queue<Knight> q = new LinkedList<>(); // 큐
     
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine()); // 체스판 크기 및 적의 말의 수
         n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
         map = new int[n + 1][n + 1];
-        visited = new boolean[n + 1][n + 1];
 
         st = new StringTokenizer(br.readLine()); // 나이트의 좌표
-        kY = Integer.parseInt(st.nextToken());
-        kX = Integer.parseInt(st.nextToken());
-        knight = new Knight(kX, kY, 0);
-        q.add(knight);
+        int kY = Integer.parseInt(st.nextToken());
+        int kX = Integer.parseInt(st.nextToken());
 
-        sol();
+        sol(kX,kY);
 
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < m; i++) {
@@ -60,26 +48,26 @@ public class nge_18404 {
         System.out.println(sb);
     }
 
-    static void sol() {
+    static void sol(int kX, int kY) {
+        Queue<int[]> q = new LinkedList<>(); // 큐
+        q.add(new int[] {kX, kY});
 
-        while(!q.isEmpty()) {   
-            knight = q.poll();
-            kY = knight.y;
-            kX = knight.x;
-            int kMC = knight.moveCount;
-            visited[kY][kX] = true;    
-            map[kY][kX] = kMC;
+        while(!q.isEmpty()) {
+            int[] t = q.poll();
+            int x = t[0];
+            int y = t[1];
             
             for(int i = 0; i < 8; i++) {
-                kY = knight.y + moveY[i];
-                kX = knight.x + moveX[i];
+                int ny = y + moveY[i];
+                int nx = x + moveX[i];
 
-                if(kY > n || kY < 0 || kX > n || kX < 0) {
+                if(ny > n || ny < 0 || nx > n || nx < 0) {
                     continue;
                 }
 
-                if(visited[kY][kX] == false) {
-                    q.add(new Knight(kX, kY, kMC + 1));
+                if(map[ny][nx] == 0) {
+                    map[ny][nx] = map[y][x] + 1;
+                    q.add(new int[]{nx,ny});
                 }
             }
         }
