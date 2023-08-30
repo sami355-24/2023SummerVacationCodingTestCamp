@@ -3,135 +3,129 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Node implements Comparable<Node>{
-    int index;
-    double cost;
+class Node implements Comparable<Node> {
+    int endIndex;
+    long time;
+    boolean isFasted;
+    int state; // 뭐지??
 
-    public Node(int index, double cost) {
-        this.index = index;
-        this.cost = cost;
+    Node(int endIndex, long time) {
+        this.endIndex = endIndex;
+        this.time = time;
+    }
+
+    Node(int endIndex, long time, int state) {
+        this.endIndex = endIndex;
+        this.time = time;
+        this.state = state;
     }
 
     @Override
     public int compareTo(Node o) {
-        return Double.compare(this.cost, o.cost);
-    }
-}
+        if(this.time < o.time) {
+            return -1;
+        }
 
-class NodeWolf implements Comparable<NodeWolf> {
-    int index;
-    double cost;
-    Boolean isRest;
-
-    public NodeWolf(int index, double cost, boolean isRest) {
-        this.index = index;
-        this.cost = cost;
-        this.isRest = isRest;
-    }
-
-    @Override
-    public int compareTo(NodeWolf o) {
-        return Double.compare(this.cost, o.cost);
+        else {
+            return 1;
+        }
     }
 }
 
 public class nge_16118 {
-    static int stumpCnt; // 나무 그루터기 개수
-    static int pathCnt; // 오솔길 개수
-
-    static int count = 0;
-    static ArrayList<Node>[] graph; // 그래프
-    static double distFox[];
-    static double distWolf[];
+    static List<Node>[] graph;
+    static long[] foxTime;
+    static long[][] wolfTime;
 
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         
-        stumpCnt = Integer.parseInt(st.nextToken());
-        pathCnt = Integer.parseInt(st.nextToken());
-        graph = new ArrayList[stumpCnt + 1];
-        for(int i = 1; i <= stumpCnt; i++) graph[i] = new ArrayList<>();
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        graph = new ArrayList[n + 1];
+        wolfTime = new long[2][n + 1];
+        foxTime = new long[n + 1];
 
-        for(int i = 0; i < pathCnt; i++) { // 그루터기와 오솔길 정보 입력
-            st = new StringTokenizer(br.readLine());
-            int v = Integer.parseInt(st.nextToken());
-            int w = Integer.parseInt(st.nextToken());
-            int cost = Integer.parseInt(st.nextToken());
+        Arrays.fill(foxTime, Long.MAX_VALUE);
+        Arrays.fill(wolfTime[0], Long.MAX_VALUE);
+        Arrays.fill(wolfTime[1], Long.MAX_VALUE);
 
-            graph[v].add(new Node(w, cost));
-            // graph[w].add(new Node(v, cost));
+        for(int i = 1; i <= n; i++) {
+            graph[i] = new ArrayList<Node>();
         }
 
-        sol();
+        for(int i = 0; i < m; i++) { // 그루터기와 오솔길 정보 입력
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int weight = Integer.parseInt(st.nextToken()) * 2;
 
-        for(int i = 1; i <= stumpCnt; i++) {
-            if(distFox[i] < distWolf[i]) {
-                System.out.println(distWolf[i]);
+            graph[from].add(new Node(to, weight));
+            graph[to].add(new Node(from, weight));
+        }
+
+        solFox();
+        solWolf();        
+
+        int count = 0;
+        for(int i = 2; i <= n; i++) {
+            if(foxTime[i] < Math.min(wolfTime[0][i], wolfTime[1][i])) {
+                count++;
             }
         }
 
         System.out.println(count);
     }
 
-    static void sol() {
-        boolean[] chk = new boolean[stumpCnt + 1];
-        distFox = new double[stumpCnt + 1];
-        double INF = Double.MAX_VALUE;
+    static void solFox() {
+        Queue<Node> queue = new PriorityQueue<Node>();
+        queue.offer(new Node(1,0));
+        foxTime[1] = 0; // 다익스트라 시작시점 초기화
 
-        Arrays.fill(distFox, INF);
-        distFox[1] = 0;
+        while(!queue.isEmpty()) {
+            Node nowVertex = queue.poll();
 
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        pq.offer(new Node(1,0));
+            if(foxTime[nowVertex.endIndex] < nowVertex.time) {
+                continue;
+            }
 
-        while(!pq.isEmpty()) {
-            int nowVertex = pq.poll().index;
-
-            if(chk[nowVertex]) continue;
-            chk[nowVertex] = true;
-
-            for(Node next : graph[nowVertex]) {
-                if(distFox[next.index] > distFox[nowVertex] + next.cost) { // 여우
-                    distFox[next.index] = distFox[nowVertex] + next.cost;
-                    pq.offer(new Node(next.index, distFox[next.index]));
+            for(Node v : graph[nowVertex.endIndex]) {
+                long cost = foxTime[nowVertex.endIndex] + v.time;
+                if(cost < foxTime[v.endIndex]) {
+                    foxTime[v.endIndex] = cost;
+                    queue.offer(new Node(v.endIndex, cost));
                 }
             }
         }
+    }
 
-        PriorityQueue<NodeWolf> pqW = new PriorityQueue<>();
-        pqW.offer(new NodeWolf(1,0, false));
+    static void solWolf() {
+        Queue<Node> queue = new PriorityQueue<Node>();
+        queue.offer(new Node(1,0,0));
+        wolfTime[0][1] = 0;
 
-        chk = new boolean[stumpCnt + 1];
-        distWolf = new double[stumpCnt + 1];
-        Arrays.fill(distWolf, INF);
-        distWolf[1] = 0;
-        boolean isRest;
+        while(!queue.isEmpty()) {
+            Node nowVertex = queue.poll();
+            int end = nowVertex.endIndex;
+            long nowTime = nowVertex.time;
 
-        while(!pqW.isEmpty()) {
-            NodeWolf now = pqW.poll();
-            int nowVertex = now.index;
-            isRest = now.isRest;
+            if(wolfTime[nowVertex.state][end] < nowTime) {
+                continue;
+            }
 
-            if(chk[nowVertex]) continue;
-            chk[nowVertex] = true;
+            for(Node v : graph[end]) {
+                int state = 1 - nowVertex.state;
+                long cost = wolfTime[nowVertex.state][end] + ((nowVertex.state == 0) ? v.time / 2 : v.time * 2);
 
-            for(Node next : graph[nowVertex]) {
-                if(isRest == false) {
-                    if(distWolf[next.index] > distWolf[nowVertex] + next.cost / 2.0) { // 여우
-                        distWolf[next.index] = distWolf[nowVertex] + next.cost / 2.0;
-                        pqW.offer(new NodeWolf(next.index, distWolf[next.index], true));
-                    }
-                }
-
-                else {
-                     if(distWolf[next.index] > distWolf[nowVertex] + next.cost * 2.0) { // 여우
-                        distWolf[next.index] = distWolf[nowVertex] + next.cost * 2.0;
-                        pqW.offer(new NodeWolf(next.index, distWolf[next.index], false));
-                    }
+                if(wolfTime[state][v.endIndex] > cost) {
+                    wolfTime[state][v.endIndex] = cost;
+                    queue.offer(new Node(v.endIndex, cost, state));
                 }
             }
         }
