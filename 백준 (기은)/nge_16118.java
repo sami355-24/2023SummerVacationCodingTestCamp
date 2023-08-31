@@ -12,7 +12,7 @@ class Node implements Comparable<Node> {
     int endIndex;
     long time;
     boolean isFasted;
-    int state; // 뭐지??
+    int state; // 현재 늑대가 쉬는지 아닌지
 
     Node(int endIndex, long time) {
         this.endIndex = endIndex;
