@@ -11,9 +11,29 @@ public class nge_14226 {
 
     static int sol(int s) {
         int ans = 0;
-        int[] dp = new int[s + 1];
-        dp[1] = 1;
+        int[] dp = new int[1001];
+        dp[1] = 0;
 
+        for(int i = 2; i <= 1000; i++) {
+            dp[i] = i;
+        }
+
+        for(int i = 4; i <= 1000; i++) {
+            if(i % 2 == 0) {
+                if(dp[i] > dp[i / 2] + 2) {
+                    dp[i] = dp[i / 2] + 2;
+                }
+            }
+        }
+
+        for(int i = 4; i < 1000; i++) {
+            if(dp[i] > dp[i + 1] + 1) {
+                dp[i] = dp[i + 1] + 1;
+            }
+        }
+
+        ans = dp[s];
+        
         return ans;
     }
 }
