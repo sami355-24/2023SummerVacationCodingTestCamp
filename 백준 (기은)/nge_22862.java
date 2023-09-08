@@ -29,11 +29,17 @@ public class nge_22862 {
     }
 
     static void sol(int n, int k) {
-        search(0,0);
+        for(int i = 0; i <= n - k; i++) {
+            search(i,1);
+            visited[i] = false;
+        }
+
         System.out.println(max);
     }
 
     static void search(int curNum, int cnt) {
+        visited[curNum] = true;
+
         if(cnt == k) {
             // 연속하는 짝수 수열의 갯수 구하기
             int ans = getAns();
@@ -42,13 +48,11 @@ public class nge_22862 {
                 max = ans;
             }
 
-            visited[curNum] = false;
             return;
         }
 
         else {
-            for(int i = curNum; i < n; i++) {
-                visited[i] = true;
+            for(int i = curNum + 1; i < n; i++) {
                 search(i,cnt + 1);
                 visited[i] = false;
             }
@@ -61,7 +65,7 @@ public class nge_22862 {
 
         for(int i = 0; i < n; i++) {
             if(S[i] % 2 == 0 && !visited[i]) {
-                save++;
+                save = save + 1;
 
                 if(maxSave < save) {
                     maxSave = save;
