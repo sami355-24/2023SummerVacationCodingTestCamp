@@ -29,54 +29,34 @@ public class nge_22862 {
     }
 
     static void sol(int n, int k) {
-        for(int i = 0; i <= n - k; i++) {
-            search(i,1);
-            visited[i] = false;
-        }
+        int l = 0;
+        int r = 0;
+        int ct = 0; // l ~ r 범위 사이의 홀수의 개수
+        int maxLen = 0;
 
-        System.out.println(max);
-    }
-
-    static void search(int curNum, int cnt) {
-        visited[curNum] = true;
-
-        if(cnt == k) {
-            // 연속하는 짝수 수열의 갯수 구하기
-            int ans = getAns();
-
-            if(max < ans) {
-                max = ans;
-            }
-
-            return;
-        }
-
-        else {
-            for(int i = curNum + 1; i < n; i++) {
-                search(i,cnt + 1);
-                visited[i] = false;
-            }
-        }
-    }
-
-    static int getAns() {
-        int maxSave = 0;
-        int save = 0;
-
-        for(int i = 0; i < n; i++) {
-            if(S[i] % 2 == 0 && !visited[i]) {
-                save = save + 1;
-
-                if(maxSave < save) {
-                    maxSave = save;
+        while(r < n) {
+            if(ct < k) {
+                if(S[r] % 2 != 0) {
+                    ct++;
                 }
+                r++;
+
+                maxLen = Math.max(maxLen, r - l - ct);
             }
 
-            else if (S[i] % 2 != 0 && !visited[i]){
-                save = 0;
+            else if(S[r] % 2 == 0) {
+                r++;
+                maxLen = Math.max(maxLen, r - l - ct);
+            }
+
+            else {
+                if(S[l] % 2 != 0) {
+                    ct--;
+                }
+                l++;
             }
         }
 
-        return maxSave;
+        System.out.println(maxLen);
     }
 }
