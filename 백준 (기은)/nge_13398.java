@@ -16,16 +16,31 @@ public class nge_13398 {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        int ans = sol(n);
-        System.out.println(ans);
+        sol(n);
     }
 
-    static int sol(int n) {
-        int l = 0;
-        int r = 0;
-        int max = 0;
-        int sum = arr[l];
+    static void sol(int n) {
+        int[][] dp = new int[n][2];
+        // 이때 0은 수열에서 수 제거 x 1의 경우에는 수 제거 o
+        dp[0][0] = arr[0];
+        dp[0][1] = arr[0];
+        
+        int ans = arr[0]; // 0을 하면 안됨.
 
-        return max;
+        for(int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(arr[i], dp[i - 1][0] + arr[i]);
+
+            dp[i][1] = Math.max(dp[i - 1][0], dp[i - 1][1] + arr[i]);
+
+            // int tmp = Math.max(dp[i][0], dp[i][1]);
+            // ans = Math.max(ans, tmp);
+        }
+
+        for(int i = 1; i < n; i++) {
+            int tmp = Math.max(dp[i][0], dp[i][1]);
+            ans = Math.max(ans,tmp);
+        }
+
+        System.out.println(ans);
     }
 }
