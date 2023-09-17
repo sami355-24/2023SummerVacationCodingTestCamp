@@ -1,12 +1,12 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class nge_2346 {
-    static List<int[]> list = new ArrayList<>();
+    static Deque<int []> d = new ArrayDeque<>();
     
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -16,42 +16,46 @@ public class nge_2346 {
         for(int i = 1; i <= n; i++) {
             int num = Integer.parseInt(st.nextToken());
             int[] input = {i,num};
-            list.add(input);
+            d.add(input);
         }
 
         sol(n);
     }
 
     static void sol(int n) {
-        int[] arr = new int[n];
-        int idx = 0;
+        int[] arr = new int[n]; 
         int count = 0;
-        
-        while(!list.isEmpty()) {
-            int removeIdx = idx % list.size();
+        // 처음 값
+        int[] in = d.poll();
+        arr[count++] = in[0];
+        int opC = in[1];
 
-            arr[count++] = list.get(removeIdx)[0];
-            // arr[count++] = idx;
-            idx += list.get(removeIdx)[1];
+        while(!d.isEmpty()) { 
+            if(opC > 0) { // 양수
+                for(int i = 1; i < opC; i++) {
+                    d.add(d.poll());
+                }
 
-            if(removeIdx < list.size() - 1) {
-                // System.out.println("지남");
-                idx -= 1; 
+                in = d.poll();
+                arr[count++] = in[0];
+                opC = in[1];
+                continue;
             }
 
-            if(idx < 0) {
-                idx += list.size();
-            }
+            else { // 음수
+                for(int i = 1; i < -opC; i++) {
+                    d.addFirst(d.pollLast());
+                }
 
-            list.remove(removeIdx);
+                in = d.pollLast();
+                arr[count++] = in[0];
+                opC = in[1];
+                continue;
+            }
         }
 
         for(int i = 0; i < n; i++) {
             System.out.print(arr[i] + " ");
         }
-
-        // for(int i = 0; i < n; i++) {
-        //     System.out.print(list.get(i)[0] + " ");
-        // }
     }
 }
