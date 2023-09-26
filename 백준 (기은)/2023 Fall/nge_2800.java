@@ -28,21 +28,21 @@ public class nge_2800 {
             char c = exp.charAt(i);
 
             if(c == '(') {
-                s.push(i);
+                s.push(i); // 열린 괄호 위치 스택에 저장
             }
 
             else if(c == ')') {
-                list.add(new int[] {s.pop(), i});
+                list.add(new int[] {s.pop(), i}); // 각 열린 괄호 위치와 닫힌 괄호 위치를 저장 
             }
         }
 
         comb(0,exp);
     }
 
-    static void comb(int depth, String exp) {
+    static void comb(int depth, String exp) { // 조합 함수
         if(depth == list.size()) {
             StringBuilder sb = new StringBuilder();
-            Boolean f = false;
+            Boolean f = false; // chk에서 아무 것도 안 없어진 경우는 제외
 
             for(int i = 0; i < exp.length(); i++) {
                 char c = exp.charAt(i);
