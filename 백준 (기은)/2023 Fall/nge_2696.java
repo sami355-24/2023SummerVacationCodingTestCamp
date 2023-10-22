@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 public class nge_2696 {
     static StringBuilder sb = new StringBuilder();
@@ -20,57 +22,33 @@ public class nge_2696 {
     }
 
     static void sol(int M) throws IOException{
-        TreeMap<Integer, Integer> map = new TreeMap<>();
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int count = 0; // 중앙값의 개수
-
+        StringTokenizer st = null;
+        List<Integer> list = new ArrayList<>();
         String tmp = "";
+        int count = 0;
 
-        for(int i = 1; i <= M; i++) {
-            if((i - 1) % 10 == 0 && i != 1) {
+        for(int i = 0; i < M; i++) {
+            if(i % 10 == 0) {
                 st = new StringTokenizer(br.readLine());
             }
 
-            int num = Integer.parseInt(st.nextToken()); // 데이터에 해당하는 값을 입력
-            
-            if(i % 2 != 0) { // 홀수 인덱스의 경우
-                count++;
+            int num = Integer.parseInt(st.nextToken());
 
-                if(map.getOrDefault(num, null) == null) {
-                    map.put(num,1);
-                }
-
-                else {
-                    int val = map.get(num);
-                    map.put(num , val + 1);
-                }
-
-                int mid = (i + 1) / 2;
-
-                for(int key : map.keySet()) {
-                    mid -= map.get(key);
-
-                    if(mid <= 0) {
-                        tmp += Integer.toString(key);
-                        tmp += " ";
-
-                        if(count % 10 == 0) {
-                            tmp += "\n";
-                        }
-
-                        break;
-                    }
-                }
+            if((i + 1) % 2 == 0) {
+                list.add(num);
             }
 
-            else { // 짝수 인덱스의 경우
-                if(map.getOrDefault(num, null) == null) {
-                    map.put(num,1);
-                }
+            else {
+                count++;
+                int mid = (i + 1) / 2;
+                list.add(num);
+                Collections.sort(list);
 
-                else {
-                    int val = map.get(num);
-                    map.put(num , val + 1);
+                tmp += list.get(mid);
+                tmp += " ";
+
+                if(count % 10 == 0) {
+                    tmp += "\n";
                 }
             }
         }
