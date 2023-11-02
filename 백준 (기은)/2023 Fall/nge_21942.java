@@ -1,71 +1,81 @@
-import java.io.IOException;
-import java.text.ParseException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class nge_21942 {
-    public static void main(String[] args) throws IOException{
-        // BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        // int N, L, F; // 정보의 개수, 대여기간, 벌금
-        // StringTokenizer st = new StringTokenizer(br.readLine());
-        
-        // N = Integer.parseInt(st.nextToken());
-        // L = 
-        // F = Integer.parseInt(st.nextToken());
-        try
-    	{
-    		// SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-    		
-    		// // 비교할 시간 (문자열) 
-    		// String timeStr1 = "06:50";
-    		// String timeStr2 = "12:10";
-    		
-    		// // 문자열 -> Date 
-    		// Date date1 = sdf.parse(timeStr1);
-    		// Date date2 = sdf.parse(timeStr2);
-			
-    		// // Date -> 밀리세컨즈 
-    		// long timeMil1 = date1.getTime();
-    		// long timeMil2 = date2.getTime();
-			
-    		// // 비교 
-    		// long diff = timeMil2 - timeMil1;
-			
-    		// long diffSec = diff / 1000;
-    		// long diffMin = diff / (1000 * 60);
-			
-    		// System.out.println("시간 차이(초) : " + diffSec + "초");
-    		// System.out.println("시간 차이(분) : " + diffMin + "분");
+    public static void main(String[] args) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat sdf2 = new SimpleDateFormat("DDD/hh:mm");
+        int N = Integer.parseInt(st.nextToken()); // 작성할 정보 개수
+        String L = st.nextToken(); // 대여기간
+        int F = Integer.parseInt(st.nextToken()); // 벌금
 
-            String L = "010/00:00";
-            String dataDate1 = "2021-01-01";
-            String dataDate2 = "2021-01-13";
+        int ld = Integer.parseInt(L.substring(0, 3));
+        int lh = Integer.parseInt(L.substring(4, 6));
+        int lm = Integer.parseInt(L.substring(7, L.length()));
 
-            Date date1 = sdf.parse(dataDate1);
-            Date date2 = sdf.parse(dataDate2);
-            Date date3 = sdf2.parse(L);
+        int range = (ld * 24 * 60) + (lh * 60) + lm;
 
-            long timeMil1 = date1.getTime();
-            long timeMil2 = date2.getTime();
+        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, Long> fin = new HashMap<>();
 
-            long diff = timeMil2 - timeMil1;
-            
-            long timeMil3 = date3.getTime();
+        for(int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
 
-            if(diff > timeMil3) {
-                long gap = diff - timeMil3; // (시간 단위)
-                long day = gap / (1000 * 60 * 60 * 12);
-                System.out.println(day);
+            String date = st.nextToken();
+            String time = st.nextToken();
+            String item = st.nextToken();
+            String user = st.nextToken();
+
+            String id = item + "_" + user;
+
+            if(map.containsKey(id)) {
+                String data1 = map.get(id);
+                String data2 = date + " " + time;
+                SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                long d1 = f.parse(data1).getTime();
+                long d2 = f.parse(data2).getTime();
+
+                long diff = (d2 - d1) / (1000 * 60);
+
+                if(diff > range) {
+                    long gap = diff - range;
+
+                    if(fin.containsKey(user)) {
+                        fin.put(user, fin.get(user) + gap * F);
+                    }
+
+                    else {
+                        fin.put(user, gap * F);
+                    }
+                }
+                map.remove(id);
             }
 
-     	}
-    	catch (ParseException e)
-    	{
-			e.printStackTrace();
-		}
-    	
+            else {
+                map.put(id, date + " " + time);
+            }
+        }
+
+        // 출력
+        List<String> list = new ArrayList<>(fin.keySet());
+        list.sort((s1,s2) -> s1.compareTo(s2));
+
+        if(fin.size() <= 0) {
+            System.out.println(-1);
+        }
+
+        else {
+            StringBuilder sb = new StringBuilder();
+            for(String key : list) {
+                sb.append(key + " " + fin.get(key) + "\n");
+            }
+            System.out.print(sb);
+        }
 	}
 }
