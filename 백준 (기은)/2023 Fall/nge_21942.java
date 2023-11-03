@@ -2,12 +2,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class nge_21942 {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
@@ -19,10 +20,10 @@ public class nge_21942 {
         int lh = Integer.parseInt(L.substring(4, 6));
         int lm = Integer.parseInt(L.substring(7, L.length()));
 
-        int range = (ld * 24 * 60) + (lh * 60) + lm;
+        int range = (ld * 24 * 60) + (lh * 60) + lm; // 대여기간 (분 단위로 계산)
 
-        HashMap<String, String> map = new HashMap<>();
-        HashMap<String, Long> fin = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>(); // 대여 리스트
+        HashMap<String, Long> fin = new HashMap<>(); // 벌금 리스트
 
         for(int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
@@ -34,7 +35,7 @@ public class nge_21942 {
 
             String id = item + "_" + user;
 
-            if(map.containsKey(id)) {
+            if(map.containsKey(id)) { // 대여리스트에 같은 id가 존재하는 경우
                 String data1 = map.get(id);
                 String data2 = date + " " + time;
                 SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -54,23 +55,24 @@ public class nge_21942 {
                         fin.put(user, gap * F);
                     }
                 }
+
                 map.remove(id);
             }
 
-            else {
+            else { // 아닌 경우
                 map.put(id, date + " " + time);
             }
         }
 
-        // 출력
+        // 출력과정
         List<String> list = new ArrayList<>(fin.keySet());
-        list.sort((s1,s2) -> s1.compareTo(s2));
+        Collections.sort(list); // 사전 순 정렬
 
-        if(fin.size() <= 0) {
+        if(fin.size() <= 0) { // 벌금 리스트에 아무도 없는 경우
             System.out.println(-1);
         }
 
-        else {
+        else { // 있는 경우
             StringBuilder sb = new StringBuilder();
             for(String key : list) {
                 sb.append(key + " " + fin.get(key) + "\n");
