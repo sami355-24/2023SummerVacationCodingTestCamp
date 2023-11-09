@@ -1,73 +1,79 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 public class nge_6416 {
-    static int[] outGraph = new int[100000]; // 나가는 노드목록
-    static int[] inGraph = new int[100000]; // 들어오는 노드목록
+    static HashMap<Integer, Integer> from = new HashMap<>(); // 나가는 정점
+    static HashSet<Integer> to = new HashSet<>(); // 들어오는 정점
+
+    static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws Exception{
         // 입력
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int k = 1; // 테스트 케이스 개수
         
-        while(true) {
-            String s1 = br.readLine();
-            if(s1.contains("-1")) {
-                break;
-            }
+        out :
+        for(int k = 1; ; k++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            boolean flag = false; // 트리의 여부
 
-            StringTokenizer st1 = new StringTokenizer(s1, "  ");
-            
-            while(st1.hasMoreTokens()) {
-                String s2 = st1.nextToken();
-
-                if(s2.contains("0")) { // 트리 삽입 종료
-                    isTree(k); // 트리인지 아닌지 출력
-                    k++;
-                    // 초기화
-                    inGraph = new int[100000];
-                    outGraph = new int[100000];
+            while(true) {
+                if(!st.hasMoreTokens()) {
+                    st = new StringTokenizer(br.readLine());
                 }
 
-                StringTokenizer st2 = new StringTokenizer(s2);
-                int u = Integer.parseInt(st2.nextToken()); // 나가는 노드
-                int v = Integer.parseInt(st2.nextToken()); // 들어오는 노드
+                int u = Integer.parseInt(st.nextToken()); // 나가는 정점
+                int v = Integer.parseInt(st.nextToken()); // 들어오는 정점
                 
-                outGraph[u] += 1;
-                inGraph[v] += 1;
+                if(u == 0) {
+                    isTree(flag, k); // 트리인지 확인
+
+                    // 초기화
+                    from = new HashMap<>();
+                    to = new HashSet<>();
+                    break;
+                }
+
+                if(u == -1) {
+                    break out; // 프로그램 종료
+                }
+
+                if(to.add(v) == false) { // hashset에 이미 도착 정점이 존재하는 경우 (즉, 한 정점에 두 개의 정점이 이어진 경우)
+                    flag = true;
+                }
+                
+                from.put(u, from.getOrDefault(v, 0) + 1); // 키 : 정점의 개수 값 : 키의 정점과 이어진 정점의 개수
             }
         }
+
+        System.out.print(sb);
     }
 
-    static void isTree(int k) {
+    static void isTree(boolean flag, int k) { // 트리 확인 함수
+        if(to.size() == 0) { // 정점이 아예 없는 경우
+            sb.append("Case " + k + " " + "is " +  "a " + "tree.").append("\n");
+            return;
+        }
+
         int rootCnt = 0;
-        boolean cond2 = true;
-        boolean cond3 = true;
 
-        for(int i = 0; i < 100000; i++) {
-            if(outGraph[i] > 0 && inGraph[i] == 0) {
+        for(int key : from.keySet()) { // 시작 정점을 모두 뽑아내고
+            if(!to.contains(key)) { // 그 정점이 도착 정점들과 비교 후 같은 정점이 없다면 이는 루트노드가 된다
                 rootCnt++;
-
-                if(rootCnt > 1) break;
-            }
-
-            if(inGraph[i] == 0) {
-                cond2 = false;
-                break;
-            }
-
-            if(inGraph[i] > 1) {
-                cond3 = false;
-                break;
             }
         }
 
-        if(rootCnt != 1 || cond2 == false || cond3 == false) {
-            System.out.println("Case " + k + " " + "is " + "not " + "a " + "tree.");
+        if(rootCnt != 1) { // 루트노드가 하나 밖에 없는 경우 이는 트리 조건을 만족할 수 없다.
+            flag = true;
+        }
+
+        if(flag) {
+            sb.append("Case " + k + " " + "is " + "not " + "a " + "tree.").append("\n");
         }
 
         else {
-            System.out.println("Case " + k + " " + "is " +  "a " + "tree.");
+            sb.append("Case " + k + " " + "is " +  "a " + "tree.").append("\n");
         }
     }
 }
