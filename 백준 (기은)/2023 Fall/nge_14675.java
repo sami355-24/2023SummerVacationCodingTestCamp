@@ -1,18 +1,16 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class nge_14675 {
     static boolean graph[][]; // 그래프
-    static HashMap<Integer, int[]> map = new HashMap<>(); // 키 : 간선번호 , 값 : 간선정보
     static int N; // 정점 개수
     static boolean[] visited;
     static StringBuilder sb = new StringBuilder();
-    static StringBuilder test = new StringBuilder();
+    
     public static void main(String[] args) throws IOException{
-        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine()); // 정점개수
         graph = new boolean[N + 1][N + 1];
 
@@ -23,9 +21,6 @@ public class nge_14675 {
 
             graph[v1][v2] = true;
             graph[v2][v1] = true;
-
-            int[] data = {v1,v2};
-            map.put(i, data);
         }
 
         int q = Integer.parseInt(br.readLine());
@@ -36,7 +31,6 @@ public class nge_14675 {
             int k = Integer.parseInt(st.nextToken());
 
             sol(t,k);
-            test.append("\n");
         }
 
         System.out.print(sb);
@@ -44,7 +38,7 @@ public class nge_14675 {
 
     static void sol(int t, int k) {
         boolean tmp[][] = graph;
-        int ev; // 제외할 점
+        int ev; // 제외할 정점
 
         if(t == 1) { // 정점 제거
             for(int i = 1; i <= N; i++) {
@@ -55,9 +49,8 @@ public class nge_14675 {
         }
 
         else { // 간선 제거
-            int[] data = map.get(k);
-            int v1 = data[0];
-            int v2 = data[1];
+            int v1 = k;
+            int v2 = k + 1;
 
             tmp[v1][v2] = false;
             tmp[v2][v1] = false;
@@ -73,9 +66,9 @@ public class nge_14675 {
 
             visited = new boolean[N + 1];
             DFS(tmp,i);
-
+            
             boolean chk = isTree(ev);
-
+    
             if(chk) {
                 sb.append("no").append("\n");
                 return;
@@ -91,10 +84,9 @@ public class nge_14675 {
 
     static void DFS(boolean[][] tmp, int v) {
         visited[v] = true;
-        test.append(v + " ");
 
         for(int i = 1; i <= N; i++) {
-            if(!visited[v] && tmp[v][i]) {
+            if(!visited[i] && tmp[v][i] == true) {
                 DFS(tmp, i);
             }
         }
@@ -110,7 +102,6 @@ public class nge_14675 {
                 return false;
             }
         }
-
         return true;
     }
 }
