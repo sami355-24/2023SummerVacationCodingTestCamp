@@ -51,7 +51,8 @@ public class nge_20924 {
     }
 
     static void findPost(int root) {
-       visited[root] = true; 
+       visited[root] = true;
+       
        if(nodeList[root].size() > 2) {
             gigaIdx = root;
             return;
