@@ -1,10 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class nge_1314 {
-    static boolean[] ans;
+    static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String s = br.readLine();
@@ -14,39 +13,71 @@ public class nge_1314 {
 
     static void sol(String s) {
         int p = 0;
-        ans = new boolean[s.length()];
 
         while(true) {
-            // AAAA가 될 수 있는지 확인
-            boolean chk = true;
-            for(int i = p; i < p + 4; i++) {
-                if(s.charAt(i) != 'X') {
-                    chk = false;
-                }
+            if(p > s.length() - 1) {
+                System.out.print(sb);
+                return;
             }
 
-            if(chk == true) {
-                for(int i = p; i < p + 4; i++) {
-                    ans[i] = true;
-                }
+            // .인경우 포인터 한칸 옮겨준다
+            if(s.charAt(p) == '.') {
+                sb.append('.');
+                p++;
+                continue;
+            }
 
-                p = p + 4;
+            // AAAA가 될 수 있는지 확인
+            boolean chkA = true;
+
+            if(p + 3 >= s.length()) {
+                chkA = false;
+            }
+
+            else {
+                for(int i = p; i < p + 4; i++) {
+                    if(s.charAt(i) != 'X') {
+                        chkA = false;
+                    }
+                }
+            
+                if(chkA == true) {
+                    for(int i = p; i < p + 4; i++) {
+                        sb.append('A');
+                    }
+
+                    p = p + 4;
+                    continue;
+                }
             }
 
             // BB가 될 수 있는지 확인
-            chk = true;
-            for(int i = p; i < p + 2; i++) {
-                if(s.charAt(i) != 'X') {
-                    chk = false;
+            boolean chkB = true;
+
+            if(p + 1 >= s.length()) {
+                chkB = false;
+            }
+
+            else {
+                for(int i = p; i < p + 2; i++) {
+                    if(s.charAt(i) != 'X') {
+                        chkB = false;
+                    }
+                }
+
+                if(chkB == true) {
+                    for(int i = p; i < p + 2; i++) {
+                        sb.append('B');
+                    }
+
+                    p = p + 2;
+                    continue;
                 }
             }
 
-            if(chk == true) {
-                for(int i = p; i < p + 2; i++) {
-                    ans[i] = true;
-                }
-
-                p = p + 2;
+            if(!chkA && !chkB) { // AAAA 와 BB 둘 다 안되는 경우
+                System.out.print(-1);
+                return;
             }
         }
     }
