@@ -26,9 +26,13 @@ public class nge_21341 {
                 chk = stack.isEmpty();
                 
                 if(chk == false) {
-                    int val = (int)Math.pow(10, stack.size() - 1);
-                    min += Integer.toString(val);
-                    stack = new Stack<>();
+                    min += "1";
+                    stack.pop();
+
+                    while(!stack.isEmpty()) {
+                        stack.pop();
+                        min += "0";
+                    }
                 }
 
                 min += "5";
@@ -38,9 +42,13 @@ public class nge_21341 {
         chk = stack.isEmpty();
 
         if(chk == false) {
-            int val_s = (int)Math.pow(10, stack.size() - 1);
-            min += Integer.toString(val_s);
-            stack = new Stack<>();
+            min += "1";
+            stack.pop();
+
+            while(!stack.isEmpty()) {
+                stack.pop();
+                min += "0";
+            }
         }
 
         // 최대값 구하기
@@ -50,15 +58,15 @@ public class nge_21341 {
             }
 
             else {
+                max += "5";
                 chk = stack.isEmpty();
-                int val = 5;
-
+                
                 if(chk == false) {
-                    val = 5 * (int)Math.pow(10, stack.size());
-                    stack = new Stack<>();
+                    while(!stack.isEmpty()) {
+                        stack.pop();
+                        max += "0";
+                    }
                 }
-
-                max += Integer.toString(val);
             }
         }
 
